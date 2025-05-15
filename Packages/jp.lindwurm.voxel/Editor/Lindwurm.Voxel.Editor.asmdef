@@ -1,0 +1,18 @@
+{
+    "name": "Lindwurm.Voxel.Editor",
+    "rootNamespace": "Lindwurm.Voxel.Editor",
+    "references": [
+        "Lindwurm.Voxel"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

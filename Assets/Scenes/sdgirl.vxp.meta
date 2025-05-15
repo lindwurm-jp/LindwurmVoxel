@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: 23c48cb266fb7254a9b9751a990438a3
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 96633c9b884e4f643a797f50c74281ee, type: 3}
+  humanoid: 1
+  importThumbnail: 1
+  attachCollider: 1
+  importForURP: 1
+  splitAllGroups: 0
+  includeRotation: 1
+  withFreePose: 0
+  overrideSize: 0
+  originSize: 70
+  useMeshRenderer: 0
+  flattenGameObject: 0
+  lightmapUV: 0
+  createTexture: 0
+  createVoxelInfo: 1
+  createAnimator: 0
+  standardLitVertexColorMaterialOverride: Shader Graphs/LitVertexColor
+  urpLitVertexColorMaterialOverride: Shader Graphs/URPLitVertexColor
+  standardLitMaterialOverride: Standard
+  urpLitMaterialOverride: Universal Render Pipeline/Lit
