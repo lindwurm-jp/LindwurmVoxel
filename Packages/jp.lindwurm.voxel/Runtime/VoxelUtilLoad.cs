@@ -14,7 +14,7 @@ namespace Lindwurm.Voxel
 			VoxelSaveInfoFormat vsi = null;
 			try
 			{
-				using (FileStream fs = new FileStream(filePath, FileMode.Open))
+				using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
 				{
 					using (BinaryReader br = new BinaryReader(fs))
 					{
