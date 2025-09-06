@@ -145,7 +145,8 @@ namespace Lindwurm.Voxel
 		public void Explode(Vector3 position, float power, ForceMode forceMode = ForceMode.Force, Transform ground = null,
 			float mass = 1f,
 			bool disposeParts = true,
-			bool reversible = false)
+			bool reversible = false,
+			bool colliderEnable = true)
 		{
 			if (blockParams != null || partsParams != null) return;
 
@@ -199,7 +200,7 @@ namespace Lindwurm.Voxel
 							};
 						}
 						// コライダーを有効にする
-						collider.enabled = true;
+						collider.enabled = colliderEnable;
 						collider.isTrigger = false;
 
 						// コンストレイントを停止する
