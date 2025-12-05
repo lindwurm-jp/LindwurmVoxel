@@ -323,6 +323,10 @@ namespace Lindwurm.Voxel
                     t.SetParent(parentObj.transform);
 
                     t.localPosition = (one.localPosition + dat.position) * scale;
+                    if(targetId == -1)
+                    {
+                        t.localPosition = one.localPosition * scale;
+                    }
                     t.localRotation = Quaternion.Euler(dat.rotation);
                     t.localScale = Vector3.one * dat.scale;
                     var ad = new ArmatureBodyData(go);
