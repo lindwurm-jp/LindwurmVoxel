@@ -14,16 +14,17 @@ namespace Lindwurm.Voxel
 		public override bool IsActive { get; set; }
 		[SerializeField] private int dir = 4;
 		public int Direction { get { return dir; } set { dir = SetDirection(value); } }
-		public Vector3 Forward { get; private set; } = Vector3.forward;
-		public BulletType Type { get; private set; } = BulletType.Shot;
+		[SerializeField] private Vector3 forward = Vector3.forward;
+		public Vector3 Forward => forward;
+		[SerializeField] private BulletType type = BulletType.Shot;
+		public BulletType Type => type;
 
 		public override void Initialize(string[] args, float blockSize)
 		{
 			// fn_shot_<dir>_<type>
 			if (args.Length > 2)
 			{
-				Quaternion rotForward;
-				(dir, Forward, rotForward) = FunctionBlockFactory.GetForward(args[2]);
+				(dir, forward, _) = FunctionBlockFactory.GetForward(args[2]);
 				if (args.Length > 3)
 					SetType(args[3]);
 			}
@@ -43,13 +44,13 @@ namespace Lindwurm.Voxel
 		{
 			if (d >= 0 && d <= 5)
 				dir = d;
-			Forward = FunctionBlockFactory.GetForwardVector(dir);
+			forward = FunctionBlockFactory.GetForwardVector(dir);
 			return dir;
 		}
 
 		private void SetType(string type)
 		{
-			Type = type switch
+			this.type = type switch
 			{
 				"s" or "shot" => BulletType.Shot,
 				"m" or "missile" => BulletType.Missile,

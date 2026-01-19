@@ -7,8 +7,10 @@ namespace Lindwurm.Voxel
 		public override string Name { get { return "rocket"; } }
 		[SerializeField] private int dir = 4;
 		public int Direction { get { return dir; } set { dir = SetDirection(value); } }
-		public Quaternion RotForward = Quaternion.identity;
-		public Vector3 Forward = Vector3.forward;
+		[SerializeField] private Quaternion rotForward = Quaternion.identity;
+		public Quaternion RotForward => rotForward;
+		[SerializeField] private Vector3 forward = Vector3.forward;
+		public Vector3 Forward => forward;
 		public override bool IsActive { get; set; }
 
 		public override void Initialize(string[] args, float blockSize)
@@ -16,7 +18,7 @@ namespace Lindwurm.Voxel
 			// fn_rocket_<forward>
 			if (args.Length > 2)
 			{
-				(dir,Forward,RotForward) = FunctionBlockFactory.GetForward(args[2]);
+				(dir, forward, rotForward) = FunctionBlockFactory.GetForward(args[2]);
 			}
 		}
 
@@ -34,7 +36,7 @@ namespace Lindwurm.Voxel
 		{
 			if (d >= 0 && d <= 5)
 				dir = d;
-			Forward = FunctionBlockFactory.GetForwardVector(dir);
+			forward = FunctionBlockFactory.GetForwardVector(dir);
 			return dir;
 		}
 	}

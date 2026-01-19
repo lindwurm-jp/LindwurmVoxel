@@ -25,7 +25,8 @@ namespace Lindwurm.Voxel
 		public float Period { get { return period; } set { period = value; } }
 		[SerializeField] private int axis = 2;
 		public int Axis{ get { return axis; } set { SetAxis(value); } }
-		private Vector3 axisV = Vector3.up;
+		[SerializeField] private Vector3 axisV = Vector3.up;
+
 		private bool orgFlag = false;
 		private Quaternion org;
 

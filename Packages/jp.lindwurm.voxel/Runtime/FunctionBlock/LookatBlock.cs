@@ -7,8 +7,9 @@ namespace Lindwurm.Voxel
 		public override string Name { get { return "lookat"; } }
 		public override bool IsActive { get; set; }
 		public Vector3 TargetPoint { get; set; }
-		public bool IsTurretH { get; private set; } = true;
 
+		[SerializeField] private bool isTurretH = true;
+		public bool IsTurretH => isTurretH;
 		[SerializeField] private int dir = 4;
 		public int Direction { get { return dir; } set { SetDirection(dir); } }
 		[SerializeField] private int axis = 2;
@@ -86,7 +87,7 @@ namespace Lindwurm.Voxel
 				//free
 				_ => SetAxis(0),
 			};
-			IsTurretH = axis == 0 || axis == 2;
+			isTurretH = axis == 0 || axis == 2;
 		}
 	}
 }
