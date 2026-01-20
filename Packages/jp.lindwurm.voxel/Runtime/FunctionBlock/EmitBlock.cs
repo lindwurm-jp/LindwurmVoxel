@@ -20,28 +20,28 @@ namespace Lindwurm.Voxel
 		}
 		[HideInInspector] public override bool IsColor { get; } = true;
 
-		private int direction = 2;
+		[SerializeField] private int direction = 2;
 		[HideInInspector] public int Direction { get { return direction; } set { SetDirection(value); } }
-		private float rate = 10f;
+        [SerializeField] private float rate = 10f;
 		[HideInInspector] public float Rate { get { return rate; } set { SetRate(value); } }
-		private float angle = 25f;
+        [SerializeField] private float angle = 25f;
 		[HideInInspector] public float Angle { get { return angle; } set { SetAngle(value); } }
-		private float radius = 1f;
+        [SerializeField] private float radius = 1f;
 		[HideInInspector] public float Radius { get { return radius; } set { SetRadius(value); } }
-		private float life = 3f;
+        [SerializeField] private float life = 3f;
 		[HideInInspector] public float Life { get { return life; } set { SetLife(value); } }
-		private float speed = 5f;
+        [SerializeField] private float speed = 5f;
 		[HideInInspector] public float Speed { get { return speed; } set { SetSpeed(value); } }
-		private float startSize = 1f;
+        [SerializeField] private float startSize = 1f;
 		[HideInInspector] public float StartSize { get { return startSize; } set { SetStartSize(value); } }
-		private float endSize = 3f;
+        [SerializeField] private float endSize = 3f;
 		[HideInInspector] public float EndSize { get { return endSize; } set { SetEndSize(value); } }
-		private int space = 1;
+        [SerializeField] private int space = 1;
 		[HideInInspector] public int Space { get { return space; } set { SetSpace(value); } }
 		[System.NonSerialized, HideInInspector] public Color color;
 		private ParticleSystem particle = null;
 		public ParticleSystem Particle { get { return particle; } set { SetPerticle(value); } }
-		private float localScale = 1f;
+        [SerializeField] private float localScale = 1f;
 
 		public override void Initialize(string[] args, float blockSize)
 		{
