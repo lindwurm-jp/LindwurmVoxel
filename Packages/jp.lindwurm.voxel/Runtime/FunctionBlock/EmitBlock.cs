@@ -39,7 +39,7 @@ namespace Lindwurm.Voxel
         [SerializeField] private int space = 1;
 		[HideInInspector] public int Space { get { return space; } set { SetSpace(value); } }
 		[System.NonSerialized, HideInInspector] public Color color;
-		private ParticleSystem particle = null;
+		[SerializeField] private ParticleSystem particle = null;
 		public ParticleSystem Particle { get { return particle; } set { SetPerticle(value); } }
         [SerializeField] private float localScale = 1f;
 
