@@ -51,13 +51,15 @@ namespace Lindwurm.Voxel
 			{
 				if (turret && turret.IsActive)
 				{
-					var basePoint = turret.transform.position;
-					var dir = aimPoint - basePoint;
-					var to = Quaternion.LookRotation(dir);
-					var rotation = Quaternion.RotateTowards(turret.transform.rotation, to, maxDegreesDelta);
-					turret.TargetPoint = rotation * Vector3.forward * dir.magnitude + basePoint;
-				}
-			}
+                    var basePoint = turret.transform.position;
+                    var forward = FunctionBlockFactory.GetForwardVector(turret.Direction);
+                    var from = Quaternion.LookRotation(turret.transform.rotation * forward);
+                    var dir = aimPoint - basePoint;
+                    var to = Quaternion.LookRotation(dir);
+                    var rotation = Quaternion.RotateTowards(from, to, maxDegreesDelta);
+                    turret.TargetPoint = rotation * Vector3.forward * dir.magnitude + basePoint;
+                }
+            }
 		}
 
 		/// <summary>
