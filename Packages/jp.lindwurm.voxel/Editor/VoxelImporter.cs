@@ -65,6 +65,17 @@ namespace Lindwurm.Voxel.Editor
             {
                 shaderString = m_ImportForURP ? m_urpLitVertexColorMaterialOverride : m_standardLitVertexColorMaterialOverride;
                 shader = Shader.Find(shaderString);
+                if (shader == null && m_ImportForURP)
+                {
+                    var path = "Packages/jp.lindwurm.voxel/Runtime/Shaders/URPLitVertexColor.shadergraph";
+                    var guid = AssetDatabase.GUIDFromAssetPath(path);
+                    ctx.DependsOnArtifact(guid);
+                    shader = AssetDatabase.LoadAssetAtPath<Shader>(path);
+                    if(shader == null)
+                    {
+                        return;
+                    }
+                }
             }
 
             if (shader == null)
