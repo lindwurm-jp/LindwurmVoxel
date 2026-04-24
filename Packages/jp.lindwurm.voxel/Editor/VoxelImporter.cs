@@ -28,6 +28,8 @@ namespace Lindwurm.Voxel.Editor
         public string m_urpLitVertexColorMaterialOverride = "Shader Graphs/URPLitVertexColor";
         public string m_standardLitMaterialOverride = "Standard";
         public string m_urpLitMaterialOverride = "Universal Render Pipeline/Lit";
+        public string m_shaderInsidePackage = "Packages/jp.lindwurm.voxel/Shaders/URPLitVertexColor.shadergraph";
+
         public override void OnImportAsset(AssetImportContext ctx)
         {
             var voxelBlock = new VoxelBlock();
@@ -67,10 +69,9 @@ namespace Lindwurm.Voxel.Editor
                 shader = Shader.Find(shaderString);
                 if (shader == null && m_ImportForURP)
                 {
-                    var path = "Packages/jp.lindwurm.voxel/Runtime/Shaders/URPLitVertexColor.shadergraph";
-                    var guid = AssetDatabase.GUIDFromAssetPath(path);
+                    var guid = AssetDatabase.GUIDFromAssetPath(m_shaderInsidePackage);
                     ctx.DependsOnArtifact(guid);
-                    shader = AssetDatabase.LoadAssetAtPath<Shader>(path);
+                    shader = AssetDatabase.LoadAssetAtPath<Shader>(m_shaderInsidePackage);
                     if(shader == null)
                     {
                         return;
