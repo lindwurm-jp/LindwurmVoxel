@@ -2,6 +2,6 @@
   "name": "jp.lindwurm.voxel",
   "displayName": "Lindwurm Voxel Library",
   "version": "1.0.7",
-  "unity": "6000.0",
+  "unity": "6000.4",
   "description": "Voxel data using package"
 }
