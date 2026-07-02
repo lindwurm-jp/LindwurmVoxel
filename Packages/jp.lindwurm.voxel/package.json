@@ -3,5 +3,8 @@
   "displayName": "Lindwurm Voxel Library",
   "version": "1.1.0",
   "unity": "6000.5",
-  "description": "Voxel data using package"
+  "description": "Voxel data using package",
+  "dependencies": {
+    "com.unity.modules.particlesystem": "1.0.0"
+  }
 }
