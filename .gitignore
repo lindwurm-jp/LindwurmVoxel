@@ -73,4 +73,5 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # nuget-packges
-/[Pp]ackages/nuget-packages/*
+/[Pp]ackages/nuget-packages/InstalledPackages.meta
+/[Pp]ackages/nuget-packages/InstalledPackages/*
