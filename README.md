@@ -17,7 +17,7 @@
 </p>
 <h4>動的にVXPファイルからモデルを生成する場合</h4>
 <p>
-  VoxelUtil.LoadFromFile();
-  VolelUtil.LoadFromBinary();
-  これらを使ってVXPファイル/データからモデルを生成できます。
+  VoxelUtil.LoadFromFile();<br>
+  VolelUtil.LoadFromBinary();<br>
+  これらを使ってVXPファイル/データからモデルを生成できます。<br>
 </p>
