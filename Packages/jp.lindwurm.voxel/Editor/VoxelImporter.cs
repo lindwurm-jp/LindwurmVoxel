@@ -9,29 +9,37 @@ namespace Lindwurm.Voxel.Editor
     [ScriptedImporter(1, new string[] {"vxk", "vxp"})]
     public class VoxelImporter : ScriptedImporter
     {
-        public bool m_Humanoid = true;
-        public bool m_ImportThumbnail = true;
-        public bool m_AttachCollider = true;
-        public bool m_ImportForURP = true;
-        public bool m_SplitAllGroups = false;
-        public bool m_IncludeRotation = true;
-        public bool m_WithFreePose = false;
-        public float m_OverrideSize = 0f;
+        public bool m_Humanoid = VoxelImporterPreference.default_Humanoid;
+        public bool m_ImportThumbnail = VoxelImporterPreference.default_ImportThumbnail;
+        public bool m_AttachCollider = VoxelImporterPreference.default_AttachCollider;
+        public bool m_ImportForURP = VoxelImporterPreference.default_ImportForURP;
+        public bool m_SplitAllGroups = VoxelImporterPreference.default_SplitAllGroups;
+        public bool m_IncludeRotation = VoxelImporterPreference.default_IncludeRotation;
+        public bool m_WithFreePose = VoxelImporterPreference.default_WithFreePose;
+        public float m_OverrideSize = VoxelImporterPreference.default_OverrideSize;
+        public bool m_UseMeshRenderer = VoxelImporterPreference.default_UseMeshRenderer;
+        public bool m_FlattenGameObject = VoxelImporterPreference.default_FlattenGameObject;
+        public bool m_LightmapUV = VoxelImporterPreference.default_LightmapUV;
+        public bool m_CreateTexture = VoxelImporterPreference.default_CreateTexture;
+		public bool m_CreateVoxelInfo = VoxelImporterPreference.default_CreateVoxelInfo;
+		public bool m_CreateAnimator = VoxelImporterPreference.default_CreateAnimator;
+        public string m_standardLitVertexColorMaterialOverride = VoxelImporterPreference.default_standardLitVertexColorMaterialOverride;
+        public string m_urpLitVertexColorMaterialOverride = VoxelImporterPreference.default_urpLitVertexColorMaterialOverride;
+        public string m_standardLitMaterialOverride = VoxelImporterPreference.default_standardLitMaterialOverride;
+        public string m_urpLitMaterialOverride = VoxelImporterPreference.default_urpLitMaterialOverride;
+
         public float m_OriginSize = 50f;
-        public bool m_UseMeshRenderer = false;
-        public bool m_FlattenGameObject = false;
-        public bool m_LightmapUV = false;
-        public bool m_CreateTexture = false;
-		public bool m_CreateVoxelInfo = true;
-		public bool m_CreateAnimator = false;
-        public string m_standardLitVertexColorMaterialOverride = "Shader Graphs/LitVertexColor";
-        public string m_urpLitVertexColorMaterialOverride = "Shader Graphs/URPLitVertexColor";
-        public string m_standardLitMaterialOverride = "Standard";
-        public string m_urpLitMaterialOverride = "Universal Render Pipeline/Lit";
         public string m_shaderInsidePackage = "Packages/jp.lindwurm.voxel/Shaders/URPLitVertexColor.shadergraph";
 
+        [SerializeField]
+        private bool m_SettingsInitialized = false;
         public override void OnImportAsset(AssetImportContext ctx)
         {
+            if (!m_SettingsInitialized)
+            {
+                ResetDefault();
+                m_SettingsInitialized = true;
+            }
             var voxelBlock = new VoxelBlock();
             VoxelUtil.LoadFromFile(ctx.assetPath, voxelBlock, false, (info)=>
             {
@@ -205,7 +213,28 @@ namespace Lindwurm.Voxel.Editor
 				ctx.AddObjectToAsset("Avater", animator.avatar);
 			}
 		}
-	}
+        private void ResetDefault()
+        {
+            m_Humanoid = VoxelImporterPreference.Humanoid;
+            m_ImportThumbnail = VoxelImporterPreference.ImportThumbnail;
+            m_AttachCollider = VoxelImporterPreference.AttachCollider;
+            m_ImportForURP = VoxelImporterPreference.ImportForURP;
+            m_SplitAllGroups = VoxelImporterPreference.SplitAllGroups;
+            m_IncludeRotation = VoxelImporterPreference.IncludeRotation;
+            m_WithFreePose = VoxelImporterPreference.WithFreePose;
+            m_OverrideSize = VoxelImporterPreference.OverrideSize;
+            m_UseMeshRenderer = VoxelImporterPreference.UseMeshRenderer;
+            m_FlattenGameObject = VoxelImporterPreference.FlattenGameObject;
+            m_LightmapUV = VoxelImporterPreference.LightmapUV;
+            m_CreateTexture = VoxelImporterPreference.CreateTexture;
+            m_CreateVoxelInfo = VoxelImporterPreference.CreateVoxelInfo;
+            m_CreateAnimator = VoxelImporterPreference.CreateAnimator;
+            m_standardLitVertexColorMaterialOverride = VoxelImporterPreference.StandardLitVertexColorMaterialOverride;
+            m_urpLitVertexColorMaterialOverride = VoxelImporterPreference.UrpLitVertexColorMaterialOverride;
+            m_standardLitMaterialOverride = VoxelImporterPreference.StandardLitMaterialOverride;
+            m_urpLitMaterialOverride = VoxelImporterPreference.UrpLitMaterialOverride;
+        }
+    }
     [CustomEditor(typeof(VoxelImporter))]
     public class VoxelImporterEditor : ScriptedImporterEditor
     {
@@ -238,21 +267,21 @@ namespace Lindwurm.Voxel.Editor
             EditorGUILayout.PropertyField(prop4, splitAllGroups);
             var prop5 = serializedObject.FindProperty("m_WithFreePose");
             EditorGUILayout.PropertyField(prop5, importFreePose);
+            var prop6 = serializedObject.FindProperty("m_OverrideSize");
+            var prop7 = serializedObject.FindProperty("m_OriginSize");
             using (new EditorGUILayout.HorizontalScope())
             {
-                var prop6 = serializedObject.FindProperty("m_OverrideSize");
                 EditorGUILayout.PropertyField(prop6, overrideSise);
-                var prop7 = serializedObject.FindProperty("m_OriginSize");
                 EditorGUILayout.LabelField($"({prop7.floatValue})");
             }
 
             var prop9 = serializedObject.FindProperty("m_UseMeshRenderer");
             EditorGUILayout.PropertyField(prop9, useMeshRenderer);
+            var prop16 = serializedObject.FindProperty("m_FlattenGameObject");
+            var prop11 = serializedObject.FindProperty("m_LightmapUV");
             if (prop9.boolValue)
             {
-                var prop16 = serializedObject.FindProperty("m_FlattenGameObject");
                 EditorGUILayout.PropertyField(prop16, new GUIContent("Flatten Game Object Tree"));
-                var prop11 = serializedObject.FindProperty("m_LightmapUV");
                 EditorGUILayout.PropertyField(prop11, createLightmapUV);
             }
 
@@ -273,6 +302,28 @@ namespace Lindwurm.Voxel.Editor
             EditorGUILayout.PropertyField(prop14, new GUIContent("Lit shader"));
             var prop15 = serializedObject.FindProperty("m_urpLitMaterialOverride");
             EditorGUILayout.PropertyField(prop15, new GUIContent("URP Lit Shader"));
+
+            if(GUILayout.Button("Reset parameters"))
+            {
+                prop0.boolValue = VoxelImporterPreference.Humanoid;
+                prop1.boolValue = VoxelImporterPreference.ImportThumbnail;
+                prop2.boolValue = VoxelImporterPreference.AttachCollider;
+                prop3.boolValue = VoxelImporterPreference.ImportForURP;
+                prop8.boolValue = VoxelImporterPreference.IncludeRotation;
+                prop4.boolValue = VoxelImporterPreference.SplitAllGroups;
+                prop5.boolValue = VoxelImporterPreference.WithFreePose;
+                prop6.floatValue = VoxelImporterPreference.OverrideSize;
+                prop9.boolValue = VoxelImporterPreference.UseMeshRenderer;
+                prop16.boolValue = VoxelImporterPreference.FlattenGameObject;
+                prop11.boolValue = VoxelImporterPreference.LightmapUV;
+                prop10.boolValue = VoxelImporterPreference.CreateTexture;
+                prop17.boolValue = VoxelImporterPreference.CreateVoxelInfo;
+                prop18.boolValue = VoxelImporterPreference.CreateAnimator;
+                prop12.stringValue = VoxelImporterPreference.StandardLitVertexColorMaterialOverride;
+                prop13.stringValue = VoxelImporterPreference.UrpLitVertexColorMaterialOverride;
+                prop14.stringValue = VoxelImporterPreference.StandardLitMaterialOverride;
+                prop15.stringValue = VoxelImporterPreference.UrpLitMaterialOverride;
+            }
 
             base.ApplyRevertGUI();
         }
