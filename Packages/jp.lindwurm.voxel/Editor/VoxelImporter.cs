@@ -9,37 +9,37 @@ namespace Lindwurm.Voxel.Editor
     [ScriptedImporter(1, new string[] {"vxk", "vxp"})]
     public class VoxelImporter : ScriptedImporter
     {
-        public bool m_Humanoid = VoxelImporterPreference.default_Humanoid;
-        public bool m_ImportThumbnail = VoxelImporterPreference.default_ImportThumbnail;
-        public bool m_AttachCollider = VoxelImporterPreference.default_AttachCollider;
-        public bool m_ImportForURP = VoxelImporterPreference.default_ImportForURP;
-        public bool m_SplitAllGroups = VoxelImporterPreference.default_SplitAllGroups;
-        public bool m_IncludeRotation = VoxelImporterPreference.default_IncludeRotation;
-        public bool m_WithFreePose = VoxelImporterPreference.default_WithFreePose;
-        public float m_OverrideSize = VoxelImporterPreference.default_OverrideSize;
-        public bool m_UseMeshRenderer = VoxelImporterPreference.default_UseMeshRenderer;
-        public bool m_FlattenGameObject = VoxelImporterPreference.default_FlattenGameObject;
-        public bool m_LightmapUV = VoxelImporterPreference.default_LightmapUV;
-        public bool m_CreateTexture = VoxelImporterPreference.default_CreateTexture;
-		public bool m_CreateVoxelInfo = VoxelImporterPreference.default_CreateVoxelInfo;
-		public bool m_CreateAnimator = VoxelImporterPreference.default_CreateAnimator;
-        public string m_standardLitVertexColorMaterialOverride = VoxelImporterPreference.default_standardLitVertexColorMaterialOverride;
-        public string m_urpLitVertexColorMaterialOverride = VoxelImporterPreference.default_urpLitVertexColorMaterialOverride;
-        public string m_standardLitMaterialOverride = VoxelImporterPreference.default_standardLitMaterialOverride;
-        public string m_urpLitMaterialOverride = VoxelImporterPreference.default_urpLitMaterialOverride;
+        public bool m_Humanoid = VoxelImporterSettings.default_Humanoid;
+        public bool m_ImportThumbnail = VoxelImporterSettings.default_ImportThumbnail;
+        public bool m_AttachCollider = VoxelImporterSettings.default_AttachCollider;
+        public bool m_ImportForURP = VoxelImporterSettings.default_ImportForURP;
+        public bool m_SplitAllGroups = VoxelImporterSettings.default_SplitAllGroups;
+        public bool m_IncludeRotation = VoxelImporterSettings.default_IncludeRotation;
+        public bool m_WithFreePose = VoxelImporterSettings.default_WithFreePose;
+        public float m_OverrideSize = VoxelImporterSettings.default_OverrideSize;
+        public bool m_UseMeshRenderer = VoxelImporterSettings.default_UseMeshRenderer;
+        public bool m_FlattenGameObject = VoxelImporterSettings.default_FlattenGameObject;
+        public bool m_LightmapUV = VoxelImporterSettings.default_LightmapUV;
+        public bool m_CreateTexture = VoxelImporterSettings.default_CreateTexture;
+		public bool m_CreateVoxelInfo = VoxelImporterSettings.default_CreateVoxelInfo;
+		public bool m_CreateAnimator = VoxelImporterSettings.default_CreateAnimator;
+        public string m_standardLitVertexColorMaterialOverride = VoxelImporterSettings.default_standardLitVertexColorMaterialOverride;
+        public string m_urpLitVertexColorMaterialOverride = VoxelImporterSettings.default_urpLitVertexColorMaterialOverride;
+        public string m_standardLitMaterialOverride = VoxelImporterSettings.default_standardLitMaterialOverride;
+        public string m_urpLitMaterialOverride = VoxelImporterSettings.default_urpLitMaterialOverride;
 
         public float m_OriginSize = 50f;
         public string m_shaderInsidePackage = "Packages/jp.lindwurm.voxel/Shaders/URPLitVertexColor.shadergraph";
 
         [SerializeField]
-        private bool m_SettingsInitialized = false;
+        private int m_SettingsVersion = 1;  // m_SettingsVersionがないのは古いインポータを使用したものなので変更しないように
         public override void OnImportAsset(AssetImportContext ctx)
         {
-            if (!m_SettingsInitialized)
+            if (m_SettingsVersion == 1)
             {
                 ResetDefault();
-                m_SettingsInitialized = true;
             }
+            m_SettingsVersion = 2;
             var voxelBlock = new VoxelBlock();
             VoxelUtil.LoadFromFile(ctx.assetPath, voxelBlock, false, (info)=>
             {
@@ -215,24 +215,26 @@ namespace Lindwurm.Voxel.Editor
 		}
         private void ResetDefault()
         {
-            m_Humanoid = VoxelImporterPreference.Humanoid;
-            m_ImportThumbnail = VoxelImporterPreference.ImportThumbnail;
-            m_AttachCollider = VoxelImporterPreference.AttachCollider;
-            m_ImportForURP = VoxelImporterPreference.ImportForURP;
-            m_SplitAllGroups = VoxelImporterPreference.SplitAllGroups;
-            m_IncludeRotation = VoxelImporterPreference.IncludeRotation;
-            m_WithFreePose = VoxelImporterPreference.WithFreePose;
-            m_OverrideSize = VoxelImporterPreference.OverrideSize;
-            m_UseMeshRenderer = VoxelImporterPreference.UseMeshRenderer;
-            m_FlattenGameObject = VoxelImporterPreference.FlattenGameObject;
-            m_LightmapUV = VoxelImporterPreference.LightmapUV;
-            m_CreateTexture = VoxelImporterPreference.CreateTexture;
-            m_CreateVoxelInfo = VoxelImporterPreference.CreateVoxelInfo;
-            m_CreateAnimator = VoxelImporterPreference.CreateAnimator;
-            m_standardLitVertexColorMaterialOverride = VoxelImporterPreference.StandardLitVertexColorMaterialOverride;
-            m_urpLitVertexColorMaterialOverride = VoxelImporterPreference.UrpLitVertexColorMaterialOverride;
-            m_standardLitMaterialOverride = VoxelImporterPreference.StandardLitMaterialOverride;
-            m_urpLitMaterialOverride = VoxelImporterPreference.UrpLitMaterialOverride;
+            var settings = VoxelImporterSettings.instance;
+
+            m_Humanoid = settings.Humanoid;
+            m_ImportThumbnail = settings.ImportThumbnail;
+            m_AttachCollider = settings.AttachCollider;
+            m_ImportForURP = settings.ImportForURP;
+            m_SplitAllGroups = settings.SplitAllGroups;
+            m_IncludeRotation = settings.IncludeRotation;
+            m_WithFreePose = settings.WithFreePose;
+            m_OverrideSize = settings.OverrideSize;
+            m_UseMeshRenderer = settings.UseMeshRenderer;
+            m_FlattenGameObject = settings.FlattenGameObject;
+            m_LightmapUV = settings.LightmapUV;
+            m_CreateTexture = settings.CreateTexture;
+            m_CreateVoxelInfo = settings.CreateVoxelInfo;
+            m_CreateAnimator = settings.CreateAnimator;
+            m_standardLitVertexColorMaterialOverride = settings.standardLitVertexColorMaterialOverride;
+            m_urpLitVertexColorMaterialOverride = settings.urpLitVertexColorMaterialOverride;
+            m_standardLitMaterialOverride = settings.standardLitMaterialOverride;
+            m_urpLitMaterialOverride = settings.urpLitMaterialOverride;
         }
     }
     [CustomEditor(typeof(VoxelImporter))]
@@ -305,24 +307,26 @@ namespace Lindwurm.Voxel.Editor
 
             if(GUILayout.Button("Reset parameters"))
             {
-                prop0.boolValue = VoxelImporterPreference.Humanoid;
-                prop1.boolValue = VoxelImporterPreference.ImportThumbnail;
-                prop2.boolValue = VoxelImporterPreference.AttachCollider;
-                prop3.boolValue = VoxelImporterPreference.ImportForURP;
-                prop8.boolValue = VoxelImporterPreference.IncludeRotation;
-                prop4.boolValue = VoxelImporterPreference.SplitAllGroups;
-                prop5.boolValue = VoxelImporterPreference.WithFreePose;
-                prop6.floatValue = VoxelImporterPreference.OverrideSize;
-                prop9.boolValue = VoxelImporterPreference.UseMeshRenderer;
-                prop16.boolValue = VoxelImporterPreference.FlattenGameObject;
-                prop11.boolValue = VoxelImporterPreference.LightmapUV;
-                prop10.boolValue = VoxelImporterPreference.CreateTexture;
-                prop17.boolValue = VoxelImporterPreference.CreateVoxelInfo;
-                prop18.boolValue = VoxelImporterPreference.CreateAnimator;
-                prop12.stringValue = VoxelImporterPreference.StandardLitVertexColorMaterialOverride;
-                prop13.stringValue = VoxelImporterPreference.UrpLitVertexColorMaterialOverride;
-                prop14.stringValue = VoxelImporterPreference.StandardLitMaterialOverride;
-                prop15.stringValue = VoxelImporterPreference.UrpLitMaterialOverride;
+                var settings = VoxelImporterSettings.instance;
+
+                prop0.boolValue = settings.Humanoid;
+                prop1.boolValue = settings.ImportThumbnail;
+                prop2.boolValue = settings.AttachCollider;
+                prop3.boolValue = settings.ImportForURP;
+                prop8.boolValue = settings.IncludeRotation;
+                prop4.boolValue = settings.SplitAllGroups;
+                prop5.boolValue = settings.WithFreePose;
+                prop6.floatValue = settings.OverrideSize;
+                prop9.boolValue = settings.UseMeshRenderer;
+                prop16.boolValue = settings.FlattenGameObject;
+                prop11.boolValue = settings.LightmapUV;
+                prop10.boolValue = settings.CreateTexture;
+                prop17.boolValue = settings.CreateVoxelInfo;
+                prop18.boolValue = settings.CreateAnimator;
+                prop12.stringValue = settings.standardLitVertexColorMaterialOverride;
+                prop13.stringValue = settings.urpLitVertexColorMaterialOverride;
+                prop14.stringValue = settings.standardLitMaterialOverride;
+                prop15.stringValue = settings.urpLitMaterialOverride;
             }
 
             base.ApplyRevertGUI();

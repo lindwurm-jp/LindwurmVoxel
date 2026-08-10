@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 53
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c60202b1bfacbe4c835de9a84a853b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Lindwurm.Voxel.Editor::Lindwurm.Voxel.Editor.VoxelImporterSettings
+  Humanoid: 1
+  ImportThumbnail: 1
+  AttachCollider: 1
+  ImportForURP: 1
+  SplitAllGroups: 0
+  IncludeRotation: 1
+  WithFreePose: 0
+  OverrideSize: 0
+  UseMeshRenderer: 0
+  FlattenGameObject: 0
+  LightmapUV: 0
+  CreateTexture: 0
+  CreateVoxelInfo: 1
+  CreateAnimator: 0
+  standardLitVertexColorMaterialOverride: Shader Graphs/LitVertexColor
+  urpLitVertexColorMaterialOverride: Shader Graphs/URPLitVertexColor
+  standardLitMaterialOverride: Standard
+  urpLitMaterialOverride: Universal Render Pipeline/Lit
