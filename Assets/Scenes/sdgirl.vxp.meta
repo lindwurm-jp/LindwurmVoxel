@@ -11,12 +11,11 @@ ScriptedImporter:
   humanoid: 1
   importThumbnail: 1
   attachCollider: 1
-  importForURP: 1
+  importForURP: 0
   splitAllGroups: 0
   includeRotation: 1
   withFreePose: 0
   overrideSize: 0
-  originSize: 70
   useMeshRenderer: 0
   flattenGameObject: 0
   lightmapUV: 0
@@ -27,3 +26,6 @@ ScriptedImporter:
   urpLitVertexColorMaterialOverride: Shader Graphs/URPLitVertexColor
   standardLitMaterialOverride: Standard
   urpLitMaterialOverride: Universal Render Pipeline/Lit
+  originSize: 70
+  shaderInsidePackage: Packages/jp.lindwurm.voxel/Shaders/URPLitVertexColor.shadergraph
+  settingsVersion: 2
