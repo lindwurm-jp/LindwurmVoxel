@@ -138,19 +138,13 @@ namespace Lindwurm.Voxel
 			await Task.Run(() => LoadFromBinary(bytes, voxelBlock, false, (voxelSaveFileInfo) =>
 			{
 				vsi = voxelSaveFileInfo;
-			},ct), ct);
-            if (ct.IsCancellationRequested)
-            {
-                ct.ThrowIfCancellationRequested();
-            }
-            else
+			}, ct), ct);
+            if (!ct.IsCancellationRequested)
             {
                 await Task.Run(() =>
                 {
                     CreateVoxelModelDirect(voxelBlock, root, material, option, scontext, null, ct);
                 }, ct);
-                if (ct.IsCancellationRequested)
-                    ct.ThrowIfCancellationRequested();
             }
             callback?.Invoke(vsi);
 			return vsi;
@@ -179,17 +173,12 @@ namespace Lindwurm.Voxel
 			{
 				vsi = voxelSaveFileInfo;
 			}, ct), ct);
-            if (ct.IsCancellationRequested)
-            {
-                ct.ThrowIfCancellationRequested();
-            }else
+            if (!ct.IsCancellationRequested)
             {
                 await Task.Run(() =>
                 {
                     CreateVoxelModelDirect(voxelBlock, root, material, option, scontext, null, ct);
                 }, ct);
-                if (ct.IsCancellationRequested)
-                    ct.ThrowIfCancellationRequested();
             }
             callback?.Invoke(vsi);
 			return vsi;
@@ -205,8 +194,6 @@ namespace Lindwurm.Voxel
             {
                 CreateVoxelModelDirect(voxelBlock, root, material, option, scontext, callback,ct);
             },ct);
-            if (ct.IsCancellationRequested)
-                ct.ThrowIfCancellationRequested();
 #endif
         }
         public static async Task CreateVoxelModelDirectAsync(SynchronizationContext scontext, VoxelBlock voxelBlock, GameObject root, Material material, CreateModelOption option, CancellationToken ct = default)
@@ -218,8 +205,6 @@ namespace Lindwurm.Voxel
 			var t = Task.Run(() =>
 			CreateVoxelModelDirect(voxelBlock, root, material, option,scontext,null,ct),ct);
             await t;
-            if (ct.IsCancellationRequested)
-                ct.ThrowIfCancellationRequested();
 #endif
         }
 
