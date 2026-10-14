@@ -4,12 +4,13 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using System.Threading;
 
 namespace Lindwurm.Voxel
 {
 	public partial class VoxelUtil
 	{
-		public static void LoadFromFile(string filePath, VoxelBlock voxelBlock, bool onlyInfo, System.Action<VoxelSaveInfoFormat> callback)
+		public static void LoadFromFile(string filePath, VoxelBlock voxelBlock, bool onlyInfo, System.Action<VoxelSaveInfoFormat> callback, CancellationToken ct = default)
 		{
 			VoxelSaveInfoFormat vsi = null;
 			try
@@ -18,7 +19,7 @@ namespace Lindwurm.Voxel
 				{
 					using (BinaryReader br = new BinaryReader(fs))
 					{
-						vsi = DoLoad(br, voxelBlock, onlyInfo);
+						vsi = DoLoad(br, voxelBlock, onlyInfo,ct);
 					}
 				}
 			}
@@ -34,7 +35,7 @@ namespace Lindwurm.Voxel
 			}
 			callback(vsi);
 		}
-		public static void LoadFromBinary(byte[] bin, VoxelBlock voxelBlock, bool onlyInfo, System.Action<VoxelSaveInfoFormat> callback)
+		public static void LoadFromBinary(byte[] bin, VoxelBlock voxelBlock, bool onlyInfo, System.Action<VoxelSaveInfoFormat> callback, CancellationToken ct = default)
 		{
 			VoxelSaveInfoFormat vsi = null;
 			try
@@ -43,7 +44,7 @@ namespace Lindwurm.Voxel
 				{
 					using (BinaryReader br = new BinaryReader(ms))
 					{
-						vsi = DoLoad(br, voxelBlock, onlyInfo);
+						vsi = DoLoad(br, voxelBlock, onlyInfo,ct);
 					}
 				}
 			}
@@ -81,7 +82,7 @@ namespace Lindwurm.Voxel
 			return (true, header[1],len);
 		}
 
-		private static VoxelSaveInfoFormat DoLoad(BinaryReader inputBinaryReader, VoxelBlock voxelBlock, bool onlyInfo)
+		private static VoxelSaveInfoFormat DoLoad(BinaryReader inputBinaryReader, VoxelBlock voxelBlock, bool onlyInfo, CancellationToken ct = default)
 		{
 			var header = CheckFileHeader(inputBinaryReader);
 			if(!header.validHeader)
@@ -359,8 +360,8 @@ namespace Lindwurm.Voxel
 				offset += 4;
 				return rt;
 			}
-
-			return vsi;
+            ct.ThrowIfCancellationRequested();
+            return vsi;
 		}
 	}
 }

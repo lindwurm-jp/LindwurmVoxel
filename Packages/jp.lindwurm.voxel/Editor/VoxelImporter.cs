@@ -89,7 +89,7 @@ namespace Lindwurm.Voxel.Editor
 
             if (shader == null)
             {
-                Debug.Log("Shader Null");
+                Debug.Log("Shader Search");
                 string[] importers = AssetDatabase.FindAssets(shaderString)
                 .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
                 .ToArray();
@@ -170,9 +170,18 @@ namespace Lindwurm.Voxel.Editor
             if(m_CreateTexture)
             {
                 Debug.Log("AddTexture");
-                var tex = mat.GetTexture("_BaseMap");
-                tex.name = "BaseMap";
-                ctx.AddObjectToAsset(tex.name, tex);
+                if (mat.HasProperty("_BaseMap"))
+                {
+                    var tex = mat.GetTexture("_BaseMap");
+                    tex.name = "BaseMap";
+                    ctx.AddObjectToAsset(tex.name, tex);
+                }
+                else if(mat.HasProperty("_MainTex"))
+                {
+                    var tex = mat.GetTexture("_MainTex");
+                    tex.name = "MainTex";
+                    ctx.AddObjectToAsset(tex.name, tex);
+                }
             }
             ctx.AddObjectToAsset("material", mat);
 			if (m_UseMeshRenderer)

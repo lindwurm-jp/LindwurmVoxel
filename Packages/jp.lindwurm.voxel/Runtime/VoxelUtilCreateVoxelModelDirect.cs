@@ -63,7 +63,7 @@ namespace Lindwurm.Voxel
 			await Task.Run(() => LoadFromFile(path, null, true, (voxelSaveFileInfo) =>
 			{
 				vsi = voxelSaveFileInfo;
-			}), ct);
+			},ct), ct);
 			return vsi;
 		}
 		/// <summary>
@@ -173,12 +173,12 @@ namespace Lindwurm.Voxel
 			await Task.Run(() => LoadFromFile(path, voxelBlock, false, (voxelSaveFileInfo) =>
 			{
 				vsi = voxelSaveFileInfo;
-			}), ct);
+			}, ct), ct);
             if (ct.IsCancellationRequested)
                 ct.ThrowIfCancellationRequested();
             await Task.Run(() =>
 			{
-				CreateVoxelModelDirect(voxelBlock, root, material, option, scontext);
+				CreateVoxelModelDirect(voxelBlock, root, material, option, scontext,null, ct);
 			}, ct);
             if (ct.IsCancellationRequested)
                 ct.ThrowIfCancellationRequested();
@@ -207,14 +207,14 @@ namespace Lindwurm.Voxel
 			await Task.CompletedTask;
 #else
 			var t = Task.Run(() =>
-			CreateVoxelModelDirect(voxelBlock, root, material, option,scontext),ct);
+			CreateVoxelModelDirect(voxelBlock, root, material, option,scontext,null,ct),ct);
             await t;
             if (ct.IsCancellationRequested)
                 ct.ThrowIfCancellationRequested();
 #endif
         }
 
-        public static void CreateVoxelModelDirect(VoxelBlock voxelBlock, GameObject root, Material material, CreateModelOption option = null, SynchronizationContext scontext = null, System.Action callback = null)
+        public static void CreateVoxelModelDirect(VoxelBlock voxelBlock, GameObject root, Material material, CreateModelOption option = null, SynchronizationContext scontext = null, System.Action callback = null, CancellationToken ct = default)
 		{
 			if (option == null)
 			{
@@ -227,7 +227,7 @@ namespace Lindwurm.Voxel
             }
             else
             {
-                work.Create(scontext, voxelBlock, root, material, option, callback);
+                work.Create(scontext, voxelBlock, root, material, option, callback, ct);
             }
         }
         public static Vector3 CSMD_SwapVector(Vector3 v)

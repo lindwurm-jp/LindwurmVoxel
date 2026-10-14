@@ -143,7 +143,8 @@ namespace Lindwurm.Voxel
 
 			private bool isHumanoid;	// humanoidで作成されたかどうか
 
-            public void Create(SynchronizationContext scontext, VoxelBlock voxelBlock, GameObject root, Material material, CreateModelOption option, System.Action callback)
+            private CancellationToken ct = default;
+            public void Create(SynchronizationContext scontext, VoxelBlock voxelBlock, GameObject root, Material material, CreateModelOption option, System.Action callback, CancellationToken ct = default)
             {
                 this.scontext = scontext;
                 this.voxelBlock = voxelBlock;
@@ -152,6 +153,7 @@ namespace Lindwurm.Voxel
                 this.option = option;
                 this.callback = callback;
                 this.abortCreate = false;
+                this.ct = ct;
 
                 scale = 50 / 1000f;
                 if (voxelBlock.voxelModelFileParameter != null)
@@ -207,6 +209,8 @@ namespace Lindwurm.Voxel
                 ContextProc(SetupParameters);
                 if (abortCreate)
                 {
+                    RemoveObjects();
+                    ct.ThrowIfCancellationRequested();
                     this.callback?.Invoke();
                     return;
                 }
@@ -231,7 +235,15 @@ namespace Lindwurm.Voxel
                 // テクスチャの生成と設定
                 if (option.createTexture)
                 {
-                    (textureSize, colorDic) = MakeTexture(voxelBlockMesh, scontext, material, "_BaseMap");
+                    var texName = "_BaseMap";
+                    if (material != null)
+                    {
+                        if (!material.HasProperty("_BaseMap"))
+                        {
+                            texName = "_MainTex";
+                        }
+                    }
+                    (textureSize, colorDic) = MakeTexture(voxelBlockMesh, scontext, material, texName);
                 }
 
                 // Meshrenderer / SkinnedMeshRenderer
@@ -244,6 +256,8 @@ namespace Lindwurm.Voxel
                 }
                 if (abortCreate)
                 {
+                    RemoveObjects();
+                    ct.ThrowIfCancellationRequested();
                     this.callback?.Invoke();
                     return;
                 }
@@ -289,8 +303,41 @@ namespace Lindwurm.Voxel
                 ContextProc(MainThreadProc3);
                 if (abortCreate)
                 {
+                    RemoveObjects();
+                    ct.ThrowIfCancellationRequested();
                     this.callback?.Invoke();
                     return;
+                }
+
+                void RemoveObjects()
+                {
+                    if (root != null)
+                    {
+                        for(var i = 0; i < root.transform.childCount; i++)
+                        {
+                            var c = root.transform.GetChild(i);
+                            if(c != null)
+                            {
+                                GameObject.Destroy(c.gameObject);
+                            }
+                        }
+                    }
+                    if(material != null && option.createTexture)
+                    {
+                        var texName = "_BaseMap";
+                        if (material != null)
+                        {
+                            if (!material.HasProperty("_BaseMap"))
+                            {
+                                texName = "_MainTex";
+                            }
+                        }
+                        var tex = material.GetTexture(texName);
+                        if (tex != null)
+                        {
+                            GameObject.Destroy(tex);
+                        }
+                    }
                 }
             }
 
@@ -301,7 +348,7 @@ namespace Lindwurm.Voxel
                 {
                     return true;
                 }
-                if(this.root == null)
+                if(this.root == null || ct.IsCancellationRequested)
                 {
                     abortCreate = true;
                 }
