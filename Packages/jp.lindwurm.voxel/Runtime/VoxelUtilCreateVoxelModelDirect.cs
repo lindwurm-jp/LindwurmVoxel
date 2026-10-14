@@ -48,7 +48,7 @@ namespace Lindwurm.Voxel
 			await Task.Run(() => LoadFromBinary(bytes, null, true, (voxelSaveFileInfo) =>
 			{
 				vsi = voxelSaveFileInfo;
-			}), ct);
+			},ct), ct);
 			return vsi;
 		}
 		/// <summary>
@@ -138,7 +138,7 @@ namespace Lindwurm.Voxel
 			await Task.Run(() => LoadFromBinary(bytes, voxelBlock, false, (voxelSaveFileInfo) =>
 			{
 				vsi = voxelSaveFileInfo;
-			}), ct);
+			},ct), ct);
             if (ct.IsCancellationRequested)
             {
                 ct.ThrowIfCancellationRequested();
@@ -147,7 +147,7 @@ namespace Lindwurm.Voxel
             {
                 await Task.Run(() =>
                 {
-                    CreateVoxelModelDirect(voxelBlock, root, material, option, scontext);
+                    CreateVoxelModelDirect(voxelBlock, root, material, option, scontext, null, ct);
                 }, ct);
                 if (ct.IsCancellationRequested)
                     ct.ThrowIfCancellationRequested();
@@ -203,7 +203,7 @@ namespace Lindwurm.Voxel
 			var scontext = SynchronizationContext.Current;
             var t = Task.Run(() =>
             {
-                CreateVoxelModelDirect(voxelBlock, root, material, option, scontext, callback);
+                CreateVoxelModelDirect(voxelBlock, root, material, option, scontext, callback,ct);
             },ct);
             if (ct.IsCancellationRequested)
                 ct.ThrowIfCancellationRequested();
