@@ -139,11 +139,15 @@ namespace Lindwurm.Voxel
 			{
 				vsi = voxelSaveFileInfo;
 			}), ct);
+            if (ct.IsCancellationRequested)
+                ct.ThrowIfCancellationRequested();
 			await Task.Run(() =>
 			{
 				CreateVoxelModelDirect(voxelBlock, root, material, option, scontext);
 			}, ct);
-			callback?.Invoke(vsi);
+            if (ct.IsCancellationRequested)
+                ct.ThrowIfCancellationRequested();
+            callback?.Invoke(vsi);
 			return vsi;
 		}
 		/// <summary>
@@ -170,11 +174,15 @@ namespace Lindwurm.Voxel
 			{
 				vsi = voxelSaveFileInfo;
 			}), ct);
-			await Task.Run(() =>
+            if (ct.IsCancellationRequested)
+                ct.ThrowIfCancellationRequested();
+            await Task.Run(() =>
 			{
 				CreateVoxelModelDirect(voxelBlock, root, material, option, scontext);
 			}, ct);
-			callback?.Invoke(vsi);
+            if (ct.IsCancellationRequested)
+                ct.ThrowIfCancellationRequested();
+            callback?.Invoke(vsi);
 			return vsi;
 		}
 
@@ -188,6 +196,8 @@ namespace Lindwurm.Voxel
             {
                 CreateVoxelModelDirect(voxelBlock, root, material, option, scontext, callback);
             },ct);
+            if (ct.IsCancellationRequested)
+                ct.ThrowIfCancellationRequested();
 #endif
         }
         public static async Task CreateVoxelModelDirectAsync(SynchronizationContext scontext, VoxelBlock voxelBlock, GameObject root, Material material, CreateModelOption option, CancellationToken ct = default)
@@ -199,10 +209,12 @@ namespace Lindwurm.Voxel
 			var t = Task.Run(() =>
 			CreateVoxelModelDirect(voxelBlock, root, material, option,scontext),ct);
             await t;
+            if (ct.IsCancellationRequested)
+                ct.ThrowIfCancellationRequested();
 #endif
         }
 
-		public static void CreateVoxelModelDirect(VoxelBlock voxelBlock, GameObject root, Material material, CreateModelOption option = null, SynchronizationContext scontext = null, System.Action callback = null)
+        public static void CreateVoxelModelDirect(VoxelBlock voxelBlock, GameObject root, Material material, CreateModelOption option = null, SynchronizationContext scontext = null, System.Action callback = null)
 		{
 			if (option == null)
 			{
