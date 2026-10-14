@@ -175,13 +175,17 @@ namespace Lindwurm.Voxel
 				vsi = voxelSaveFileInfo;
 			}, ct), ct);
             if (ct.IsCancellationRequested)
+            {
                 ct.ThrowIfCancellationRequested();
-            await Task.Run(() =>
-			{
-				CreateVoxelModelDirect(voxelBlock, root, material, option, scontext,null, ct);
-			}, ct);
-            if (ct.IsCancellationRequested)
-                ct.ThrowIfCancellationRequested();
+            }else
+            {
+                await Task.Run(() =>
+                {
+                    CreateVoxelModelDirect(voxelBlock, root, material, option, scontext, null, ct);
+                }, ct);
+                if (ct.IsCancellationRequested)
+                    ct.ThrowIfCancellationRequested();
+            }
             callback?.Invoke(vsi);
 			return vsi;
 		}

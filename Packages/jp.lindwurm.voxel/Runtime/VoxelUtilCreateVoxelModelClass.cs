@@ -209,7 +209,7 @@ namespace Lindwurm.Voxel
                 ContextProc(SetupParameters);
                 if (abortCreate)
                 {
-                    RemoveObjects();
+                    ContextProc(RemoveObjects, false);
                     ct.ThrowIfCancellationRequested();
                     this.callback?.Invoke();
                     return;
@@ -256,7 +256,7 @@ namespace Lindwurm.Voxel
                 }
                 if (abortCreate)
                 {
-                    RemoveObjects();
+                    ContextProc(RemoveObjects, false);
                     ct.ThrowIfCancellationRequested();
                     this.callback?.Invoke();
                     return;
@@ -303,7 +303,7 @@ namespace Lindwurm.Voxel
                 ContextProc(MainThreadProc3);
                 if (abortCreate)
                 {
-                    RemoveObjects();
+                    ContextProc(RemoveObjects,false);
                     ct.ThrowIfCancellationRequested();
                     this.callback?.Invoke();
                     return;
@@ -325,12 +325,9 @@ namespace Lindwurm.Voxel
                     if(material != null && option.createTexture)
                     {
                         var texName = "_BaseMap";
-                        if (material != null)
+                        if (!material.HasProperty("_BaseMap"))
                         {
-                            if (!material.HasProperty("_BaseMap"))
-                            {
-                                texName = "_MainTex";
-                            }
+                            texName = "_MainTex";
                         }
                         var tex = material.GetTexture(texName);
                         if (tex != null)
@@ -354,12 +351,12 @@ namespace Lindwurm.Voxel
                 }
                 return abortCreate;
             }
-            private void ContextProc(System.Action callProc)
+            private void ContextProc(System.Action callProc, bool checkDestroy = true)
             {
                 if(scontext != null)
                 {
                     scontext.Send((_)=> {
-                        if(!CheckDestroy())
+                        if(!CheckDestroy() || !checkDestroy)
                         {
                             callProc();
                         }
