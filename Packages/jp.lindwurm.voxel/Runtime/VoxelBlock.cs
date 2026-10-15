@@ -286,7 +286,7 @@ namespace Lindwurm.Voxel
             return null;
         }
 
-        public void Initialize()
+        public void Initialize(bool useToEdit = true)
         {
             if (blocks.Count == 1 && blocks[0].blocks.ContainsKey(Vector3Int.zero) && blocks[0].blocks[Vector3Int.zero].paletteNo == 0
                 && voxelJoints != null && voxelJoints.Count == 1 && voxelJoints[0].id == 0 && voxelJoints[0].parentId == -1 && voxelJoints[0].position == Vector3.zero)
@@ -326,8 +326,36 @@ namespace Lindwurm.Voxel
             var jd = new VoxelJoint(ROOT_JOINT_ID, -1, Vector3.zero);
             jd.name = "Root";
             voxelJoints.Add(jd);
-            CreateMesh(ROOT_JOINT_ID);
+            if (useToEdit)
+            {
+                CreateMesh(ROOT_JOINT_ID);
+            }
             editParam.enableEdit.Add(ROOT_JOINT_ID, true);
+        }
+        ~VoxelBlock()
+        {
+            // 呼ばれるタイミングはガベージコレクション次第なので不定期だがメッシュを削除する。
+            foreach (var one in meshes)
+            {
+                if(one.Value != null)
+                {
+                    GameObject.Destroy(one.Value);
+                }
+            }
+            foreach (var one in meshesJoint)
+            {
+                if(one.Value != null)
+                {
+                    GameObject.Destroy(one.Value);
+                }
+            }
+            foreach (var one in meshesWireframe)
+            {
+                if(one.Value != null)
+                {
+                    GameObject.Destroy(one.Value);
+                }
+            }
         }
         public void CreateMesh(int jointId = -1)
         {

@@ -82,7 +82,7 @@ namespace Lindwurm.Voxel
 			}
 			VoxelSaveInfoFormat vsi = null;
 			VoxelBlock voxelBlock = new();
-			voxelBlock.Initialize();
+			voxelBlock.Initialize(false);
 			LoadFromBinary(bytes, voxelBlock, false, (voxelSaveFileInfo) =>
 			{
 				vsi = voxelSaveFileInfo;
@@ -106,7 +106,7 @@ namespace Lindwurm.Voxel
 			}
 			VoxelSaveInfoFormat vsi = null;
 			VoxelBlock voxelBlock = new();
-			voxelBlock.Initialize();
+			voxelBlock.Initialize(false);
 			LoadFromFile(path, voxelBlock, false, (voxelSaveFileInfo) =>
 			{
 				vsi = voxelSaveFileInfo;
@@ -134,7 +134,7 @@ namespace Lindwurm.Voxel
 			}
 			VoxelSaveInfoFormat vsi = null;
 			VoxelBlock voxelBlock = new();
-			voxelBlock.Initialize();
+			voxelBlock.Initialize(false);
 			await Task.Run(() => LoadFromBinary(bytes, voxelBlock, false, (voxelSaveFileInfo) =>
 			{
 				vsi = voxelSaveFileInfo;
@@ -167,8 +167,8 @@ namespace Lindwurm.Voxel
 				material = new Material(Shader.Find("Shader Graphs/URPLitVertexColor"));
 			}
 			VoxelSaveInfoFormat vsi = null;
-			VoxelBlock voxelBlock = new();
-			voxelBlock.Initialize();
+			VoxelBlock voxelBlock = new ();
+			voxelBlock.Initialize(false);
 			await Task.Run(() => LoadFromFile(path, voxelBlock, false, (voxelSaveFileInfo) =>
 			{
 				vsi = voxelSaveFileInfo;

@@ -467,7 +467,7 @@ namespace Lindwurm.Voxel
                 Vector3 basePos = Vector3.zero;
                 Quaternion rot = Quaternion.identity;
 
-                ContextProc(MaintThreadProc1);
+                ContextProc(MainThreadProc1);
                 if (abortCreate) return;
 
                 var joints = voxelBlock.EnumGetJoint();
@@ -921,7 +921,7 @@ namespace Lindwurm.Voxel
             }
 
 
-            void MaintThreadProc1()
+            void MainThreadProc1()
             {
                 groups.ForEach(t =>
                 {
