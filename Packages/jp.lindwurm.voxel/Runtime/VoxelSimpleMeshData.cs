@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -100,6 +101,15 @@ namespace Lindwurm.Voxel
                 mr.sharedMaterial = material;
             }
 
+        }
+
+        public void Cancel()
+        {
+            if(mesh != null)
+            {
+                GameObject.Destroy(mesh);
+                mesh = null;
+            }
         }
     };
 }

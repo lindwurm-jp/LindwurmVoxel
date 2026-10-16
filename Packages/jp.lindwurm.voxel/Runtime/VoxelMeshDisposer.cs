@@ -10,6 +10,9 @@ namespace Lindwurm.Voxel
 
         [HideInInspector]
         public Mesh mesh = null;
+        [HideInInspector]
+        public bool awaken = false;
+
         public Mesh targetMesh {
             get
             {
@@ -17,7 +20,6 @@ namespace Lindwurm.Voxel
             }
             set
             {
-                //Debug.Log("targetMesh Add");
                 var m = value;
                 if(mesh == m)
                 {
@@ -32,19 +34,28 @@ namespace Lindwurm.Voxel
                         Destroy(mesh);
                     }
                 }
-                if(meshRefCount.ContainsKey(m))
+                if (awaken)
                 {
-                    meshRefCount[m]++;
-                }else
-                {
-                    meshRefCount[m] = 1;
+                    if (meshRefCount.ContainsKey(m))
+                    {
+                        meshRefCount[m]++;
+                    }
+                    else
+                    {
+                        meshRefCount[m] = 1;
+                    }
                 }
                 mesh = m;
+                if(!awaken && !gameObject.activeInHierarchy)
+                {
+                    VoxelMeshDisposerSingleton.instance.AddWatchItem(this, mesh);
+                }
             }
         }
 
         private void Awake()
         {
+            awaken = true;
             //Debug.Log($"new Disposer Awake {gameObject.name},{targetMesh==null}");
             if(mesh != null)
             {

@@ -313,10 +313,43 @@ namespace Lindwurm.Voxel
                 {
                     if (root != null)
                     {
-                        for(var i = 0; i < root.transform.childCount; i++)
+                        // OnDestroyが走らない(一度もwakeされていない)場合は、ここでDestroyする
+                        var vmsd = root.GetComponentsInChildren<VoxelMeshDisposer>().Where(x => !x.awaken);
+                        if(vmsd != null )
+                        {
+                            foreach(var one in vmsd)
+                            {
+                                if(one != null)
+                                {
+                                    GameObject.Destroy(one.mesh);
+                                    one.mesh = null;
+                                }
+                            }
+                        }
+                        if(simpleMeshData != null)
+                        {
+                            foreach (var one in simpleMeshData)
+                            {
+                                if(one.Value != null)
+                                {
+                                     one.Value.Cancel();
+                                }
+                            }
+                        }
+                        if(skinnedMeshData != null)
+                        {
+                            foreach (var one in skinnedMeshData)
+                            {
+                                if(one.Value != null)
+                                {
+                                     one.Value.Cancel();
+                                }
+                            }
+                        }
+                        for (var i = 0; i < root.transform.childCount; i++)
                         {
                             var c = root.transform.GetChild(i);
-                            if(c != null)
+                            if (c != null)
                             {
                                 GameObject.Destroy(c.gameObject);
                             }

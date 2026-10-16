@@ -81,5 +81,13 @@ namespace Lindwurm.Voxel
             }
 
         }
+        public void Cancel()
+        {
+            if (mesh != null)
+            {
+                GameObject.Destroy(mesh);
+                mesh = null;
+            }
+        }
     };
 }
