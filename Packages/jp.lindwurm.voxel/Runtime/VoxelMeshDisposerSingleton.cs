@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Lindwurm.Voxel
@@ -5,18 +6,19 @@ namespace Lindwurm.Voxel
     public class VoxelMeshDisposerSingleton : MonoBehaviour
     {
         private static VoxelMeshDisposerSingleton _instance = null;
-        private int watchListLengthAdd = 100;
+        private int watchListLengthAdd = 50;
         private int entryHead = 0;
         private int point = 0;
         private int entryCount = 0;
         struct ObjEntry
         {
             public VoxelMeshDisposer item;
+            public GameObject gm;
             public Mesh mesh;
             public int NextFree;
             public bool Used;
         }
-        private ObjEntry[] entries = new ObjEntry[100];
+        private ObjEntry[] entries = new ObjEntry[50];
         public static VoxelMeshDisposerSingleton instance { get {
             if(_instance == null)
             {
@@ -43,6 +45,7 @@ namespace Lindwurm.Voxel
             entryHead = entries[id].NextFree;
             entries[id].Used = true;
             entries[id].item = v;
+            entries[id].gm = v.gameObject;
             entries[id].mesh = mesh;
             if (entryHead == -1)
             {// 端まで行ってしまったら拡張
@@ -52,17 +55,20 @@ namespace Lindwurm.Voxel
                     newEntries[i] = entries[i];
                 }
                 newEntries[id].NextFree = entries.Length;
+                entryHead = entries.Length;
                 for(var i = entries.Length; i < newEntries.Length; i++)
                 {
-                    entries[i].NextFree = i + 1;
+                    newEntries[i].NextFree = i + 1;
                 }
                 newEntries[^1].NextFree = -1;
                 entries = newEntries;
+
             }
         }
         private void RemoveWatchItem(int id)
         {
             entries[id].item = null;
+            entries[id].gm = null;
             entries[id].mesh = null;
             entries[id].Used = false;
             entries[id].NextFree = entryHead;
@@ -77,18 +83,18 @@ namespace Lindwurm.Voxel
         {
             if (entries[point].Used)
             {
-                if (entries[point].item == null)
+                if (entries[point].gm == null)
                 {
                     if (entries[point].mesh != null)
                     {
-                        Object.Destroy(entries[point].mesh);
-                        RemoveWatchItem(point);
+                        Destroy(entries[point].mesh);
                     }
+                    RemoveWatchItem(point);
                 }
                 else
                 {
                     // gameobjectがenableになったら自動削除されるのでリストから削除
-                    if (entries[point].item.awaken)
+                    if (entries[point].item == null || entries[point].item.awaken)
                     {
                         RemoveWatchItem(point);
                     }
@@ -100,20 +106,6 @@ namespace Lindwurm.Voxel
                 point = 0;
             }
 
-            for (int i = 0; i < entries.Length; i++)
-            {
-                if (!entries[i].Used)
-                    continue;
-
-                if (entries[i].item == null)
-                {
-                    if(entries[i].mesh != null)
-                    {
-                        Object.Destroy(entries[i].mesh);
-                        RemoveWatchItem(i);
-                    }
-                }
-            }
         }
 
     }
