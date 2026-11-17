@@ -383,7 +383,7 @@ namespace Lindwurm.Voxel
                 avatar = AvatarBuilder.BuildHumanAvatar(root, hd);
                 if(!avatar.isValid || !avatar.isHuman)
                 {
-                    Debug.Log("Not Valid");
+                    Debug.Log($"Avatar Error: avatar.isValid={avatar.isValid}, avatar.isHuman={avatar.isHuman}");
                 }
 
             }

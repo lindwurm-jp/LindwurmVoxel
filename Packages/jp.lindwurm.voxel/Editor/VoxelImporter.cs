@@ -31,6 +31,7 @@ namespace Lindwurm.Voxel.Editor
         public float m_OriginSize = 50f;
         public string m_shaderInsidePackage = "Packages/jp.lindwurm.voxel/Shaders/URPLitVertexColor.shadergraph";
 
+        public string m_errorMessage = "";
         [SerializeField]
         private int m_SettingsVersion = 1;  // m_SettingsVersionがないのは古いインポータを使用したものなので変更しないように
         public override void OnImportAsset(AssetImportContext ctx)
@@ -62,6 +63,171 @@ namespace Lindwurm.Voxel.Editor
             }else
             {
                 m_OriginSize = 50f;
+            }
+            var humanoid = m_Humanoid;
+            if (m_Humanoid)
+            {
+                List<HumanBone> humanBones = VoxelUtil.CSMD_CreateHumanBone(voxelBlock);
+
+                var tf = humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.Hips])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.Spine])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.Head])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.LeftUpperArm])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.RightUpperArm])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.LeftLowerArm])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.RightLowerArm])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.LeftHand])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.RightHand])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.LeftUpperLeg])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.RightUpperLeg])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.LeftLowerLeg])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.RightLowerLeg])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.LeftFoot])
+                    && humanBones.Exists(x => x.humanName == HumanTrait.BoneName[(int)HumanBodyBones.RightFoot])
+                    ;
+                var msg = "";
+                if (tf)
+                {
+                    var humanName = HumanTrait.BoneName.ToList();
+                    var boneParent = new Dictionary<HumanBodyBones, HumanBodyBones[]>()
+                    {
+                        { HumanBodyBones.Hips, new HumanBodyBones[] {HumanBodyBones.LastBone } },
+                        { HumanBodyBones.Spine, new HumanBodyBones[] {HumanBodyBones.Hips } },
+                        { HumanBodyBones.Chest, new HumanBodyBones[] {HumanBodyBones.Spine } },
+                        { HumanBodyBones.UpperChest, new HumanBodyBones[] {HumanBodyBones.Chest } },
+                        { HumanBodyBones.Neck, new HumanBodyBones[] {HumanBodyBones.UpperChest, HumanBodyBones.Chest, HumanBodyBones.Spine} },
+                        { HumanBodyBones.Head, new HumanBodyBones[] {HumanBodyBones.Neck, HumanBodyBones.UpperChest, HumanBodyBones.Chest, HumanBodyBones.Spine } },
+                        { HumanBodyBones.Jaw, new HumanBodyBones[] {HumanBodyBones.Head }},
+                        { HumanBodyBones.LeftEye,new HumanBodyBones[] {HumanBodyBones.Head } },
+                        { HumanBodyBones.RightEye,new HumanBodyBones[] {HumanBodyBones.Head } },
+                        { HumanBodyBones.LeftShoulder, new HumanBodyBones[] {HumanBodyBones.UpperChest, HumanBodyBones.Chest, HumanBodyBones.Spine} },
+                        { HumanBodyBones.LeftUpperArm, new HumanBodyBones[] {HumanBodyBones.LeftShoulder, HumanBodyBones.UpperChest, HumanBodyBones.Chest, HumanBodyBones.Spine} },
+                        { HumanBodyBones.LeftLowerArm, new HumanBodyBones[] {HumanBodyBones.LeftUpperArm } },
+                        { HumanBodyBones.LeftHand, new HumanBodyBones[] {HumanBodyBones.LeftLowerArm } },
+                        { HumanBodyBones.RightShoulder, new HumanBodyBones[] {HumanBodyBones.UpperChest, HumanBodyBones.Chest, HumanBodyBones.Spine} },
+                        { HumanBodyBones.RightUpperArm, new HumanBodyBones[] {HumanBodyBones.RightShoulder, HumanBodyBones.UpperChest, HumanBodyBones.Chest, HumanBodyBones.Spine} },
+                        { HumanBodyBones.RightHand, new HumanBodyBones[] {HumanBodyBones.RightLowerArm } },
+                        { HumanBodyBones.LeftUpperLeg, new HumanBodyBones[] { HumanBodyBones.Hips} },
+                        { HumanBodyBones.LeftLowerLeg, new HumanBodyBones[] { HumanBodyBones.LeftUpperLeg} },
+                        { HumanBodyBones.LeftFoot, new HumanBodyBones[] { HumanBodyBones.LeftLowerLeg} },
+                        { HumanBodyBones.LeftToes, new HumanBodyBones[] { HumanBodyBones.LeftFoot} },
+                        { HumanBodyBones.RightUpperLeg, new HumanBodyBones[] { HumanBodyBones.Hips} },
+                        { HumanBodyBones.RightLowerLeg, new HumanBodyBones[] { HumanBodyBones.RightUpperLeg} },
+                        { HumanBodyBones.RightFoot, new HumanBodyBones[] { HumanBodyBones.RightLowerLeg} },
+                        { HumanBodyBones.RightToes, new HumanBodyBones[] { HumanBodyBones.RightFoot} },
+                        { HumanBodyBones.LeftThumbProximal, new HumanBodyBones[] { HumanBodyBones.LeftHand} },
+                        { HumanBodyBones.LeftThumbIntermediate, new HumanBodyBones[] { HumanBodyBones.LeftThumbProximal} },
+                        { HumanBodyBones.LeftThumbDistal, new HumanBodyBones[] { HumanBodyBones.LeftThumbIntermediate} },
+                        { HumanBodyBones.LeftIndexProximal, new HumanBodyBones[] { HumanBodyBones.LeftHand} },
+                        { HumanBodyBones.LeftIndexIntermediate, new HumanBodyBones[] { HumanBodyBones.LeftIndexProximal} },
+                        { HumanBodyBones.LeftIndexDistal, new HumanBodyBones[] { HumanBodyBones.LeftIndexIntermediate} },
+                        { HumanBodyBones.LeftMiddleProximal, new HumanBodyBones[] { HumanBodyBones.LeftHand} },
+                        { HumanBodyBones.LeftMiddleIntermediate, new HumanBodyBones[] { HumanBodyBones.LeftMiddleProximal} },
+                        { HumanBodyBones.LeftMiddleDistal, new HumanBodyBones[] { HumanBodyBones.LeftMiddleIntermediate} },
+                        { HumanBodyBones.LeftRingProximal, new HumanBodyBones[] { HumanBodyBones.LeftHand} },
+                        { HumanBodyBones.LeftRingIntermediate, new HumanBodyBones[] { HumanBodyBones.LeftRingProximal} },
+                        { HumanBodyBones.LeftRingDistal, new HumanBodyBones[] { HumanBodyBones.LeftRingIntermediate} },
+                        { HumanBodyBones.LeftLittleProximal, new HumanBodyBones[] { HumanBodyBones.LeftHand} },
+                        { HumanBodyBones.LeftLittleIntermediate, new HumanBodyBones[] { HumanBodyBones.LeftLittleProximal} },
+                        { HumanBodyBones.LeftLittleDistal, new HumanBodyBones[] { HumanBodyBones.LeftLittleIntermediate} },
+                        { HumanBodyBones.RightThumbProximal, new HumanBodyBones[] {HumanBodyBones.RightHand } },
+                    };
+
+                    var joints = voxelBlock.EnumGetJoint();
+                    string detail = "";
+                    while (joints.MoveNext())
+                    {
+                        var joint = joints.Current;
+                        var tb = ToBodyBone(joint);
+                        if (boneParent.ContainsKey(tb))
+                        {
+                            if (!CheckBoneChain(joint, tb, boneParent[tb]))
+                            {
+                                msg = $"ボーンチェーンが不正でHumanoidとして作成できませんでした。\n";
+                                if (!string.IsNullOrEmpty(detail)) msg += detail + "\n";
+                                msg += $"{joint.name}の親ボーンは";
+                                foreach (var one in boneParent[tb])
+                                {
+                                    msg += $"{one.ToString()} ";
+                                }
+                                msg += (boneParent[tb].Length > 1 ? "のいずれか" : "") + "である必要があります。";
+                                humanoid = false;
+                            }
+                        }
+                    }
+
+                    bool IsHumanBone(string name)
+                    {
+                        return humanName.Exists(x => x == name);
+                    }
+                    HumanBodyBones ToBodyBone(VoxelJoint joint)
+                    {
+                        var idx = humanName.FindIndex(x => x == joint.name);
+                        if (idx >= 0)
+                        {
+                            return (HumanBodyBones)idx;
+                        }
+                        return HumanBodyBones.LastBone;
+                    }
+                    bool CheckBoneChain(VoxelJoint cj, HumanBodyBones keyBone, HumanBodyBones[] parentBones)
+                    {
+                        var p = cj.parentId;
+                        // ルートまで到達した場合NG
+                        if (p < 0)
+                        {
+                            if (keyBone == HumanBodyBones.Hips)
+                            {
+                                return true;
+                            }
+                            return false;
+                        }
+                        var pcj = voxelBlock.GetJoint(p);
+                        if (IsHumanBone(pcj.name))
+                        {
+                            var b = ToBodyBone(pcj);
+                            if (b == HumanBodyBones.LastBone)
+                            {
+                                return false;
+                            }
+                            if (parentBones.Contains(b))
+                            {
+                                foreach (var one in parentBones)
+                                {
+                                    if (one == b)
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        // その親骨が他の体の部位にないことを確認する
+                                        var joints = voxelBlock.EnumGetJoint();
+                                        while (joints.MoveNext())
+                                        {
+                                            var joint = joints.Current;
+                                            if (IsHumanBone((string)joint.name) && ToBodyBone(joint) == one)
+                                            {
+                                                detail = $"{joint.name}が別の場所についています";
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                detail = $"{keyBone.ToString()}が別の場所{pcj.name}についています";
+                                return false;
+                            }
+                        }
+                        return CheckBoneChain(pcj, keyBone, parentBones);
+                    }
+                }
+                else
+                {
+                    msg = "基本Humanoidボーンがありません。\n必要なボーン名は\nHips\nSpine\nHead\nLeftUpperArm\nLeftLowerArm\nLeftHand\nRightUpperArm\nRightLowerArm\nRightHand\nLeftUpperLeg\nLeftLowerLeg\nLeftFoot\nRightUpperLeg\nRightLowerLeg\nRightFoot\nです";
+                }
+
+                m_errorMessage = msg;
             }
             var go = new GameObject();
             string shaderString;
@@ -121,7 +287,7 @@ namespace Lindwurm.Voxel.Editor
             option.createCollider = m_AttachCollider;
             option.splitAllGroup = m_SplitAllGroups;
             option.thumbnailPose = m_WithFreePose;
-            option.isHumanoid = m_Humanoid;
+            option.isHumanoid = humanoid;
             option.overrideScale = m_OverrideSize;
             option.includeRotation = m_IncludeRotation;
             option.createLightMapUV = m_LightmapUV;
